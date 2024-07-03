@@ -1,25 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react';
 import Post from '../../components/Post';
+import { useQuery } from '@tanstack/react-query';
 
 const HomePage = () => {
-  const [posts, setPosts] = useState<any>([]);
+  const { data, isLoading } = useQuery({
+    queryKey: ['posts'],
+    queryFn: async () => {
+      const response = await fetch('https://zexkx72ghe.execute-api.us-east-1.amazonaws.com/dev/v1/posts');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    }
+  });
 
-  useEffect(() => {
-    fetch('https://zexkx72ghe.execute-api.us-east-1.amazonaws.com/dev/v1/posts')
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        setPosts(data);
-      });
-  }, []);
-  // const posts = await fetch('https://zexkx72ghe.execute-api.us-east-1.amazonaws.com/dev/v1/posts');
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      {posts.map((post: { author: string; likes: number; image: string }) => (
-        <Post name={post.author} likes={post.likes} image={post.image} />
+      {data.map((post: { author: string; likes: number; image: string; id: string; sk: string }) => (
+        <Post name={post.author} likes={post.likes} image={post.image} id={post.sk} key={post.sk} />
       ))}
     </div>
   );
