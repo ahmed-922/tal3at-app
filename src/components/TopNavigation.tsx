@@ -7,9 +7,9 @@ import Button from '@mui/material/Button';
 const TopNavigation = ()=> {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed" sx={{ backgroundColor: 'black' }}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} >
             <i>طلعات</i>
           </Typography>
           <Button color="inherit">Login</Button>
